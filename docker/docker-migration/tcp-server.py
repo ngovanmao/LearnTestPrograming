@@ -1,8 +1,11 @@
 #!/usr/bin/python
-
-import SocketServer
+import sys
+if sys.version_info[0] >= 3:
+    import socketserver as skServer
+else:
+    import SocketServer as skServer
 i = 0
-class MyTCPHandler(SocketServer.BaseRequestHandler):
+class MyTCPHandler(skServer.BaseRequestHandler):
     
     """
     The request handler class for our server.
@@ -27,7 +30,7 @@ if __name__ == "__main__":
 
     #print("server open at port = ", PORT)
     # Create the server, binding to localhost on port 9999
-    server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
+    server = skServer.TCPServer((HOST, PORT), MyTCPHandler)
     # Activate the server; this will keep running until you
     # interrupt the program with Ctrl-C
     server.serve_forever()
