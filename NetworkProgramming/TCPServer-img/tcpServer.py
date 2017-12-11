@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import SocketServer
+from struct import unpack
 
 i = 0
 class MyTCPHandler(SocketServer.BaseRequestHandler):
@@ -18,7 +19,13 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
         i += 1
         fname = str(i) + '.jpg'
         fp = open(fname, 'wb')
-        data = self.request.recv(1024)
+        img_size = self.request.recv(8)
+        (length,) = unpack('>Q', img_size)
+        data = b''
+        while len(data) < length:
+            to_read = length - len(data)
+            data += self.request.recv(
+                4096 if to_read > 4096 else to_read)
         fp.write(data)
         fp.close()
 
