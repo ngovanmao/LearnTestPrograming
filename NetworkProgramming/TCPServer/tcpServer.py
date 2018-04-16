@@ -14,13 +14,25 @@ class MyTCPHandler(SocketServer.BaseRequestHandler):
     def handle(self):
         # self.request is the TCP socket connected to the client
         self.data = self.request.recv(1024).strip()
-        print "{} wrote:".format(self.client_address[0])
+        self.request.sendall(self.data.upper())
+        print("receive request from {}".format(self.client_address[0]))
         print self.data
         # just send back the same data, but upper-cased
-        self.request.sendall(self.data.upper())
+
+class MyTCPHandlerStream(SocketServer.StreamRequestHandler):
+
+    def handle(self):
+        # self.rfile is a file-like object created by the handler;
+        # we can now use e.g. readline() instead of raw recv() calls
+        self.data = self.rfile.readline().strip()
+        self.wfile.write(self.data.upper())
+        print("{} wrote:".format(self.client_address[0]))
+        print(self.data)
+        # Likewise, self.wfile is a file-like object used to write back
+        # to the client
 
 if __name__ == "__main__":
-    HOST, PORT = "localhost", 9999
+    HOST, PORT = "", 9999
 
     # Create the server, binding to localhost on port 9999
     server = SocketServer.TCPServer((HOST, PORT), MyTCPHandler)
