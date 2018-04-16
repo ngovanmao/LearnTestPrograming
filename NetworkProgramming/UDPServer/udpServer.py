@@ -4,7 +4,7 @@ import socket
 import binascii
 
 UDP_IP = ""
-UDP_PORT= 8888
+UDP_PORT= 9999
 
 print("Open a UDP server with port = ",UDP_PORT)
 
